@@ -62,7 +62,17 @@ export const HistoryList = styled.div`
   }
 `;
 
-export const StatusFlag = styled.span`
+const STATUS_COLORS = {
+  yellow: "yellow-500",
+  green: "green-500",
+  red: "red-500",
+} as const;
+
+interface StatusProps {
+  statusColor: "yellow" | "red" | "green";
+}
+
+export const StatusFlag = styled.span<StatusProps>`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -72,6 +82,7 @@ export const StatusFlag = styled.span`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background-color: ${(props) => props.theme["green-300"]};
+    background-color: ${(props) =>
+      props.theme[STATUS_COLORS[props.statusColor]]};
   }
 `;

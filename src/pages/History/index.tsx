@@ -21,7 +21,7 @@ export function History() {
               <td>20 minutos</td>
               <td>Ha cerca de 2 meses</td>
               <td>
-                <StatusFlag> Concluido</StatusFlag>
+                <StatusFlag statusColor="green"> Concluido</StatusFlag>
               </td>
             </tr>
 
@@ -30,7 +30,7 @@ export function History() {
               <td>20 minutos</td>
               <td>Ha cerca de 2 meses</td>
               <td>
-                <StatusFlag> Concluido</StatusFlag>
+                <StatusFlag statusColor="red"> Interrompido</StatusFlag>
               </td>
             </tr>
 
@@ -39,7 +39,7 @@ export function History() {
               <td>20 minutos</td>
               <td>Ha cerca de 2 meses</td>
               <td>
-                <StatusFlag> Concluido</StatusFlag>
+                <StatusFlag statusColor="red"> Interrompido</StatusFlag>
               </td>
             </tr>
 
@@ -48,7 +48,7 @@ export function History() {
               <td>20 minutos</td>
               <td>Ha cerca de 2 meses</td>
               <td>
-                <StatusFlag> Concluido</StatusFlag>
+                <StatusFlag statusColor="yellow"> Em progresso</StatusFlag>
               </td>
             </tr>
 
@@ -57,15 +57,25 @@ export function History() {
               <td>20 minutos</td>
               <td>Ha cerca de 2 meses</td>
               <td>
-                <StatusFlag> Concluido</StatusFlag>
+                <StatusFlag statusColor="yellow"> Em progresso</StatusFlag>
               </td>
             </tr>
+
             <tr>
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Ha cerca de 2 meses</td>
               <td>
-                <StatusFlag>Concluido</StatusFlag>
+                <StatusFlag statusColor="yellow"> Em progresso</StatusFlag>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Tarefa</td>
+              <td>20 minutos</td>
+              <td>Ha cerca de 2 meses</td>
+              <td>
+                <StatusFlag statusColor="green"> Concluido</StatusFlag>
               </td>
             </tr>
           </tbody>
