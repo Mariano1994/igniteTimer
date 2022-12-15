@@ -14,16 +14,29 @@ import {
 } from "./styles";
 
 const newCylceFormValidationSchema = zod.object({
-  taks: zod.string().min(3, "Informe a tarefa"),
+  task: zod.string().min(3, "Informe a tarefa"),
   minutesAmount: zod.number().min(5).max(60),
 });
 
+// interface NewCyrcleFormData {
+//   task: string;
+//   minutesAmount: number;
+// }
+
+type NewCyrcleFormData = zod.infer<typeof newCylceFormValidationSchema>;
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch, reset } = useForm<NewCyrcleFormData>({
     resolver: zodResolver(newCylceFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
   });
 
-  function handleCreateNewCylcle(data: any) {}
+  function handleCreateNewCylcle(data: NewCyrcleFormData) {
+    reset();
+  }
 
   const task = watch("task");
   const minutesAmount = watch("minutesAmount");
