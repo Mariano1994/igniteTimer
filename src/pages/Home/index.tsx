@@ -1,4 +1,4 @@
-import { Circle, Play } from "phosphor-react";
+import { Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -50,13 +50,18 @@ export function Home() {
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   useEffect(() => {
+    let interval: number;
+
     if (activeCycle) {
-      setInterval(() => {
+      interval = setInterval(() => {
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeCycle.startDate)
         );
       }, 1000);
     }
+    return () => {
+      clearInterval(interval);
+    };
   }, [activeCycle]);
 
   function handleCreateNewCylcle(data: NewCyrcleFormData) {
@@ -71,6 +76,7 @@ export function Home() {
 
     setCylcle((state) => [...state, newCycle]);
     setActiveCycleId(id);
+    setAmountSecondsPassed(0);
     reset();
   }
 
@@ -82,6 +88,12 @@ export function Home() {
 
   const minutes = String(minutesAmount).padStart(2, "0");
   const seconds = String(secondAmount).padStart(2, "0");
+
+  useEffect(() => {
+    if (activeCycle) {
+      document.title = `${minutes}: ${seconds} - Timer`;
+    }
+  });
 
   const task = watch("task");
   const minuteAmount = watch("minutesAmount");
