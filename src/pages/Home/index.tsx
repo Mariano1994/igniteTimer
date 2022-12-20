@@ -1,4 +1,4 @@
-import { Play } from "phosphor-react";
+import { HandPalm, Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -13,11 +13,12 @@ import {
   Separator,
   StartCountDownButton,
   TaskInput,
+  StopCountDownButton,
 } from "./styles";
 
 const newCylceFormValidationSchema = zod.object({
   task: zod.string().min(3, "Informe a tarefa"),
-  minutesAmount: zod.number().min(5).max(60),
+  minutesAmount: zod.number().min(1).max(60),
 });
 
 // interface NewCyrcleFormData {
@@ -32,6 +33,8 @@ interface Cycle {
   task: string;
   minuteAmount: number;
   startDate: Date;
+  interruptedDate?: Date;
+  finishedDate?: Date;
 }
 
 export function Home() {
@@ -49,20 +52,40 @@ export function Home() {
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
+  const totalSeconds = activeCycle ? activeCycle.minuteAmount * 60 : 0;
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
+
   useEffect(() => {
     let interval: number;
 
     if (activeCycle) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate)
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate
         );
+
+        if (secondsDifference > totalSeconds) {
+          setCylcle((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCycleId) {
+                return { ...cycle, finishedDate: new Date() };
+              } else {
+                return cycle;
+              }
+            })
+          );
+          clearInterval(interval);
+        } else {
+          setAmountSecondsPassed(secondsDifference);
+        }
       }, 1000);
     }
+
     return () => {
       clearInterval(interval);
     };
-  }, [activeCycle]);
+  }, [activeCycle, totalSeconds, activeCycleId]);
 
   function handleCreateNewCylcle(data: NewCyrcleFormData) {
     const id = String(new Date().getTime());
@@ -80,8 +103,18 @@ export function Home() {
     reset();
   }
 
-  const totalSeconds = activeCycle ? activeCycle.minuteAmount * 60 : 0;
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
+  function handleInterruptedCycle() {
+    setCylcle((state) =>
+      state.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() };
+        } else {
+          return cycle;
+        }
+      })
+    );
+    setActiveCycleId(null);
+  }
 
   const minutesAmount = Math.floor(currentSeconds / 60);
   const secondAmount = currentSeconds % 60;
@@ -107,6 +140,7 @@ export function Home() {
             id="task"
             type="text"
             placeholder="Deia um nome para a sua tarefa"
+            disabled={!!activeCycle}
             list="task-suggestions"
             {...register("task")}
           />
@@ -124,8 +158,9 @@ export function Home() {
             type="number"
             placeholder="00"
             step={5}
-            min={5}
+            min={1}
             max={60}
+            disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
           />
 
@@ -142,11 +177,22 @@ export function Home() {
           <span>{seconds[1]}</span>
         </CountDownContainer>
 
-        <StartCountDownButton disabled={!(task && minuteAmount)} type="submit">
-          {" "}
-          <Play size={24} />
-          Começar
-        </StartCountDownButton>
+        {activeCycle ? (
+          <StopCountDownButton onClick={handleInterruptedCycle} type="button">
+            {" "}
+            <HandPalm size={24} />
+            Interromper
+          </StopCountDownButton>
+        ) : (
+          <StartCountDownButton
+            disabled={!(task && minuteAmount)}
+            type="submit"
+          >
+            {" "}
+            <Play size={24} />
+            Começar
+          </StartCountDownButton>
+        )}
       </form>
     </HomeContainer>
   );
