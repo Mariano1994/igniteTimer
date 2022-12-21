@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from "react";
 
 interface CycleContextType {
+  cycles: Cycle[];
   activeCycle: Cycle | undefined;
   activeCycleId: string | null;
   amountSecondsPassed: number;
@@ -66,7 +67,6 @@ export function CycleContexProvider({ children }: CycleContextProviderProps) {
     setCylcle((state) => [...state, newCycle]);
     setActiveCycleId(id);
     setAmountSecondsPassed(0);
-    // reset();
   }
 
   function interruptCurrentCycle() {
@@ -85,6 +85,7 @@ export function CycleContexProvider({ children }: CycleContextProviderProps) {
   return (
     <CycleContext.Provider
       value={{
+        cycles,
         activeCycle,
         activeCycleId,
         markCurentCycleAsFinished,

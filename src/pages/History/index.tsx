@@ -1,6 +1,11 @@
+import { useContext } from "react";
+import { CycleContext } from "../../context/CyclesContext";
 import { HistoryContainer, HistoryList, StatusFlag } from "./styles";
+import { formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
 
 export function History() {
+  const { cycles } = useContext(CycleContext);
   return (
     <HistoryContainer>
       <h1>Meus historicos</h1>
@@ -16,68 +21,37 @@ export function History() {
           </thead>
 
           <tbody>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="green"> Concluido</StatusFlag>
-              </td>
-            </tr>
+            {cycles.map((cycle) => {
+              return (
+                <tr key={cycle.id}>
+                  <td>{cycle.task}</td>
+                  <td>{cycle.minuteAmount} muinutes</td>
+                  <td>
+                    {formatDistanceToNow(cycle.startDate, {
+                      addSuffix: true,
+                      locale: ptBR,
+                    })}
+                  </td>
 
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="red"> Interrompido</StatusFlag>
-              </td>
-            </tr>
+                  <td>
+                    {cycle.finishedDate && (
+                      <StatusFlag statusColor="green"> Concluido</StatusFlag>
+                    )}
 
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="red"> Interrompido</StatusFlag>
-              </td>
-            </tr>
+                    {cycle.interruptedDate && (
+                      <StatusFlag statusColor="red"> Interrompido</StatusFlag>
+                    )}
 
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="yellow"> Em progresso</StatusFlag>
-              </td>
-            </tr>
-
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="yellow"> Em progresso</StatusFlag>
-              </td>
-            </tr>
-
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="yellow"> Em progresso</StatusFlag>
-              </td>
-            </tr>
-
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Ha cerca de 2 meses</td>
-              <td>
-                <StatusFlag statusColor="green"> Concluido</StatusFlag>
-              </td>
-            </tr>
+                    {!cycle.finishedDate && !cycle.interruptedDate && (
+                      <StatusFlag statusColor="yellow">
+                        {" "}
+                        Em progresso
+                      </StatusFlag>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </HistoryList>
