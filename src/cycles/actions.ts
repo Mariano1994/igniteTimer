@@ -1,4 +1,3 @@
-import { Action } from "@remix-run/router";
 import { Cycle } from "./reducer";
 
 export enum ActionType {
